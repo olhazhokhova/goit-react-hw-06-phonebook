@@ -1,29 +1,42 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import s from './AddContacts.module.css';
+import { addContact } from 'redux/contactSlice';
 
 const validationSchema = Yup.object({
   name: Yup.string()
     .trim()
     .matches(
       /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
-      "Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan",
+      "Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
     )
     .required(),
   number: Yup.string()
     .trim()
     .matches(
       /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
-      'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +',
+      'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +'
     )
     .required(),
 });
 
-const AddContacts = ({ onSubmit }) => {
+const AddContacts = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.items.items);
+
   const handleSubmit = (values, { resetForm }) => {
-    onSubmit(values);
+    const isContactExist = contacts.some(contact => {
+      return contact.name.toLowerCase().includes(values.name.toLowerCase());
+    });
+    if (isContactExist) {
+      alert(`${values.name} is already in contacts`);
+      resetForm();
+      return;
+    }
+    dispatch(addContact(values));
     resetForm();
   };
 
