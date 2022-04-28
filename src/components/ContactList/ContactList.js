@@ -7,9 +7,14 @@ const ContactList = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(state => state.items.items);
 
+  const filter = useSelector(state => state.filter.value);
+  const filterContacts = contacts.filter(({ name }) =>
+    name.toLowerCase().includes(filter.toLowerCase())
+  );
+
   return (
     <ul className={`${s.list} ${s.scrollbar}`}>
-      {contacts.map(({ id, name, number }) => {
+      {filterContacts.map(({ id, name, number }) => {
         return (
           <li key={id} className={s.item}>
             <span>

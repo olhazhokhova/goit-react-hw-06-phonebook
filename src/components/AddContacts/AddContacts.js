@@ -2,9 +2,10 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import PropTypes from 'prop-types';
+import { ToastContainer, toast } from 'react-toastify';
 import s from './AddContacts.module.css';
 import { addContact } from 'redux/contactSlice';
+import 'react-toastify/dist/ReactToastify.css';
 
 const validationSchema = Yup.object({
   name: Yup.string()
@@ -32,7 +33,15 @@ const AddContacts = () => {
       return contact.name.toLowerCase().includes(values.name.toLowerCase());
     });
     if (isContactExist) {
-      alert(`${values.name} is already in contacts`);
+      toast.warn(`${values.name} is already in contacts`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       resetForm();
       return;
     }
@@ -48,6 +57,7 @@ const AddContacts = () => {
         onSubmit={handleSubmit}
       >
         <Form autoComplete="off">
+          <ToastContainer />
           <label htmlFor="name">Name</label>
           <Field type="text" name="name" />
           <ErrorMessage name="name">
@@ -58,15 +68,13 @@ const AddContacts = () => {
           <ErrorMessage name="number">
             {msg => <div style={{ color: 'red', fontSize: '13px' }}>{msg}</div>}
           </ErrorMessage>
-          <button type="submit">Add contact</button>
+          <button type="submit" class={s.button}>
+            Add contact
+          </button>
         </Form>
       </Formik>
     </div>
   );
-};
-
-AddContacts.propTypes = {
-  onSubmit: PropTypes.func,
 };
 
 export default AddContacts;

@@ -12,7 +12,7 @@ input {
   margin-top: 5px;
 }
 
-button {
+.button {
   -webkit-appearance: none;
   display: block;
   width: 100%;
@@ -34,7 +34,7 @@ button {
   white-space: nowrap;
 }
 
-button:hover {
+.button:hover {
   background-color: #2ea7f3;
 }
 
